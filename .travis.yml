@@ -2,39 +2,37 @@ sudo: required
 group: travis_latest
 language: python
 env:
-    - REPO=apachecn/LeetCode
+  matrix:
+  - REPO=apachecn/LeetCode
+  global:
+    secure: HiRIsgq7Ewz41UckzqvfvgXXBBv6vtjE4mfZ1LVJG97c9Azrs0W+O9hGy/ur3Stzq8y6cYauQiGzSxeO4nJKheGxJqPnanyOqx5wNRYujc5zgNV6SCAvIqXKlxGySB/tGP/yvArnXakxZ67tav9OcHszGWCfSKZyZR85yFu0lFMprI/1bU9EZgl33v29R7rAuIGBwog4hdnbbZuEADDnWaalsoIkLUlh/2qDt8nCqwvBdGnVDEqU9hTzrlzELdh3ymeGSU06US6t7B6dpMN9uay7cmXo5Hn0JOEnGBYif98nGQjbu68GXgvc9RBDY822XwAIpMo4VOkW6pe2qqDXsALAELck8GrIvwQbXn+24JJr+jdgcRmLT10FzIkeA82wCSONA8tARzTdf8bGWP6AiKcAW2NH+NOiWY3k/t8Z+xfARUliNn2KqQXhJsNs4exyuSxz5wVRjMKjDHdyXGsengfPVEvu+tnNSodnQ/zzQiXH4rDyHkdLqIiF4x0kI0Ow5kBjdLneMj4f389OywQWSiK3W5zlG3G5MIGSSBAr7r/7PPS/RtUPNViVgY8+V4QVuMQ5RSUox13cV7sthqU6o74ybtOzsOm9ryfKcT1fc2Vpk3grKV4FeAILP//o7HhIOw5ofS3hgysFe45ql9PaI8qrvXOORxozZZUdYqi7eBA=
 python:
-    #- 2.7
-    - 3.6
-    #- nightly
-    #- pypy
-    #- pypy3
+- 3.6
 matrix:
-    allow_failures:
-        - python: nightly
-        - python: pypy
-        - python: pypy3
+  allow_failures:
+  - python: nightly
+  - python: pypy
+  - python: pypy3
 install:
-    #- pip install -r requirements.txt
-    - sudo python2 -m pip install flake8
-    - pip install flake8 future  # pytest  # add other testing frameworks later
+- sudo python2 -m pip install flake8
+- pip install flake8 future
 before_script:
-    - URL=https://github.com/${REPO}
-    - URL=https://github.com/Upgrade-to-Python3/LeetCode
-    - echo ; echo -n "flake8 testing of ${URL} on " ; python -V
-    - git clone --depth=50 ${URL} ~/${REPO}  # --branch=master
-    - cd ~/${REPO}
+- URL=https://github.com/${REPO}
+- URL=https://github.com/Upgrade-to-Python3/LeetCode
+- echo ; echo -n "flake8 testing of ${URL} on " ; python -V
+- git clone --depth=50 ${URL} ~/${REPO}
+- cd ~/${REPO}
 script:
-    - echo stop the build if there are Python 2 syntax errors or undefined names
-    - echo ; echo -n "flake8 testing of ${URL} on " ; python2 -V
-    - python2 -m flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics
-    - git remote add upstream https://cclauss:${GITHUB_TOKEN}@github.com/${REPO}
-    - git checkout -b modernize-python2-code
-    - futurize --stage1 -w .
-    - git commit --all -m "Modernize Python 2 code to get ready for Python 3"
-    - git push --set-upstream origin modernize-python2-code
-    - echo ; echo -n "flake8 testing of ${URL} on " ; python -V
-    - flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics
+- echo stop the build if there are Python 2 syntax errors or undefined names
+- echo ; echo -n "flake8 testing of ${URL} on " ; python2 -V
+- python2 -m flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics
+- git remote add upstream https://cclauss:${GITHUB_TOKEN}@github.com/${REPO}
+- git checkout -b modernize-python2-code
+- futurize --stage1 -w .
+- git commit --all -m "Modernize Python 2 code to get ready for Python 3"
+- git push --set-upstream origin modernize-python2-code
+- echo ; echo -n "flake8 testing of ${URL} on " ; python -V
+- flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics
 notifications:
-    on_success: change
-    on_failure: change  # `always` will be the setting once code changes slow down
+  on_success: change
+  on_failure: change
